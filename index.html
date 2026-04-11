@@ -194,13 +194,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="scard">
         <div class="scard-l">Content completed</div>
         <div class="scard-v" id="st-completed">0</div>
-        <div class="scard-sub">pieces at 30+ reps</div>
+        <div class="scard-sub">at 30+ reps</div>
       </div>
       <div class="scard" style="cursor:pointer" onclick="editWeeklyGoal()">
         <button class="goal-edit-btn">edit</button>
         <div class="scard-l">This week</div>
         <div class="scard-v" id="st-week">0</div>
-        <div class="scard-sub">of <span id="st-goal">150</span> min goal</div>
+        <div class="scard-sub">of <span id="st-goal">30</span> min/day goal</div>
         <div class="goal-bar-wrap">
           <div class="goal-bar-bg"><div class="goal-bar-fill" id="goal-bar" style="width:0%"></div></div>
         </div>
@@ -252,14 +252,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <script>
 const PRESETS=[
-  {phase:'Listening',items:['Understood a full song without looking up the lyrics','Followed a YouTube video without subtitles','Completed 30 reps on a single piece of content','Understood a native podcast episode','Watched a full TV show or film in my target language']},
-  {phase:'Reading',items:['Finished my first book in the target language','Read a full chapter without stopping to look things up','Finished an audiobook and written book pairing','Understood a native news article or blog post','Pushed through the new book dip on a harder book']},
-  {phase:'Writing',items:['Wrote my first journal entry','Completed 30 days of journaling','Used the Translator Technique with zero major differences','Had a full written chat conversation in the target language']},
-  {phase:'Speaking',items:['Had my first AI voice conversation in my target language','Completed my first Italki or real conversation session','Was understood by a native speaker','Completed 30 shadowing reps on a single clip','Had a spontaneous conversation with no preparation','Had a conversation and forgot it was a foreign language']},
+  {phase:"Listening",items:[
+    "Caught a word I didn't know I knew",
+    "Understood a joke — and actually laughed",
+    "Listened without subtitles and followed along",
+    "Watched a full TV show or movie in my target language"
+  ]},
+  {phase:"Reading",items:[
+    "Read a full page without stopping once",
+    "Finished my first book in the target language",
+    "Completed a Google search in my target language",
+    "Understood a meme or a social media comment"
+  ]},
+  {phase:"Writing",items:[
+    "Wrote my first journal entry",
+    "Wrote a 250+ word entry without using a translator",
+    "Had a written conversation in my target language (with AI or a real person)",
+    "Got a like on my social media comment in my target language"
+  ]},
+  {phase:"Speaking",items:[
+    "Thought of a word or phrase in my target language before English",
+    "Had my first AI conversation in my target language",
+    "Had a conversation with a native speaker that lasted more than 5 minutes",
+    "Completed 30 shadowing reps with a single piece of content"
+  ]}
 ];
 
 const KEY='ll_tracker_v1';
-let S={language:'',content:[],sessions:[],milestones:{},logFilter:'all',calYear:0,calMonth:0,selectedDay:'',weeklyGoal:150};
+let S={language:'',content:[],sessions:[],milestones:{},logFilter:'all',calYear:0,calMonth:0,selectedDay:'',weeklyGoal:210};
 let _cid=null,_clen=0,_editSessionId=null,_editLogId=null;
 
 function loadState(){try{const d=localStorage.getItem(KEY);if(d)S={...S,...JSON.parse(d)};}catch(e){}}
@@ -322,7 +342,7 @@ function renderToday(){
   document.getElementById('st-completed').textContent=stats.completed;
   document.getElementById('st-week').textContent=fmtTime(stats.weekMin);
   const goal=S.weeklyGoal||150;
-  document.getElementById('st-goal').textContent=goal+' min';
+  document.getElementById('st-goal').textContent=Math.round(goal/7);
   const pct=Math.min(Math.round(stats.weekMin/goal*100),100);
   const bar=document.getElementById('goal-bar');
   bar.style.width=pct+'%';bar.className='goal-bar-fill'+(pct>=100?' done':'');
@@ -390,8 +410,9 @@ function deleteSession(id){
   if(document.getElementById('view-plan').classList.contains('on')){renderCal();renderDayPanel(S.selectedDay);}
 }
 function editWeeklyGoal(){
-  const val=prompt('Set weekly time goal (minutes):',S.weeklyGoal||150);
-  if(val===null)return;const n=parseInt(val);if(n>0){S.weeklyGoal=n;saveState();renderToday();}
+  const current=Math.round((S.weeklyGoal||150)/7);
+  const val=prompt('How many minutes per day do you want to practice?',current);
+  if(val===null)return;const n=parseInt(val);if(n>0){S.weeklyGoal=n*7;saveState();renderToday();}
 }
 
 function moveMonth(dir){
