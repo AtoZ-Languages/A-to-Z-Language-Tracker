@@ -24,7 +24,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .view{display:none}.view.on{display:block}
 
 .stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:14px}
-.scard{background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.scard{background:#fff;border-radius:12px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);position:relative}
 .scard-l{font-size:11px;color:#888;margin-bottom:3px}
 .scard-v{font-size:22px;font-weight:600;color:#1B3A5C;line-height:1.2}
 .scard-sub{font-size:11px;color:#aaa;margin-top:2px}
@@ -34,21 +34,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .goal-bar-bg{background:#eee;border-radius:4px;height:5px;overflow:hidden}
 .goal-bar-fill{background:#2A7F7F;height:5px;border-radius:4px;transition:width 0.4s}
 .goal-bar-fill.done{background:#2A6040}
+.goal-edit-btn{position:absolute;top:8px;right:8px;background:transparent;border:none;cursor:pointer;font-size:11px;color:#bbb;font-family:inherit}
 
 .nudge-banner{background:#FEF3DC;border:1px solid #F0C060;border-radius:10px;padding:11px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
 .nudge-dot{width:8px;height:8px;background:#C9962A;border-radius:50%;flex-shrink:0}
 .nudge-text{font-size:13px;color:#8B6914;font-weight:500;line-height:1.4;flex:1}
-.goal-edit-btn{float:right;background:transparent;border:none;cursor:pointer;font-size:11px;color:#bbb;padding:0;font-family:inherit}
 
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px}
 .sec-hdr:first-child{margin-top:0}
 .sec-label{font-size:11px;font-weight:600;color:#999;letter-spacing:0.5px;text-transform:uppercase}
 .btn-add{background:#1B3A5C;color:#fff;border:none;border-radius:9px;padding:7px 14px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600;-webkit-appearance:none}
+.btn-teal{background:#2A7F7F;color:#fff;border:none;border-radius:9px;padding:7px 14px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600;-webkit-appearance:none}
 .btn-sm{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:6px 12px;font-size:13px;cursor:pointer;font-family:inherit;color:#333}
 
-.session-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-.session-card.done{opacity:0.65;border-left:3px solid #2A6040;border-radius:0 12px 12px 0}
-.session-card.today-plan{border-left:3px solid #C9962A;border-radius:0 12px 12px 0}
+.session-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06);transition:background 0.2s,border-color 0.2s}
+.session-card.partial{background:#FFFBF0;border-left:3px solid #C9962A;border-radius:0 12px 12px 0}
+.session-card.done-card{background:#F0FAF4;border-left:3px solid #2A6040;border-radius:0 12px 12px 0;opacity:0.75}
+.session-card.planned{border-left:3px solid #CBD5E0;border-radius:0 12px 12px 0}
 .sc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .sc-title{font-size:15px;font-weight:600;color:#222;flex:1;line-height:1.3}
 .phase-pill{font-size:11px;padding:3px 9px;border-radius:10px;font-weight:600;white-space:nowrap;flex-shrink:0}
@@ -60,13 +62,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sc-meta-item{font-size:12px;color:#888}
 .sc-meta-item b{color:#333;font-weight:600}
 .sc-link{font-size:12px;color:#2A7F7F;text-decoration:underline;cursor:pointer;display:block;margin-top:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
-.sc-actions{display:flex;align-items:center;gap:8px;margin-top:12px}
-.rep-row{display:flex;align-items:center;gap:8px;flex:1}
-.rep-label{font-size:13px;color:#888;white-space:nowrap}
-.rep-input{width:54px;padding:7px 8px;border:1px solid #ddd;border-radius:8px;font-size:15px;font-weight:600;text-align:center;background:#f8f8f8;color:#222;font-family:inherit;-webkit-appearance:none}
-.rep-time{font-size:12px;color:#2A7F7F;font-weight:600;white-space:nowrap}
-.btn-done{padding:8px 16px;background:#2A6040;color:#fff;border:none;border-radius:9px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600;margin-left:auto;white-space:nowrap;-webkit-appearance:none}
-.btn-done.is-done{background:#e8f5e9;color:#2A6040;border:1px solid #2A6040;cursor:default}
+
+.rep-counter{display:flex;align-items:center;gap:10px;margin-top:12px}
+.rep-btn{width:36px;height:36px;border-radius:9px;border:1px solid #e0e0e0;background:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#333;flex-shrink:0;font-family:inherit;line-height:1;-webkit-appearance:none}
+.rep-btn:active{transform:scale(0.92);background:#f0f0f0}
+.rep-count{font-size:15px;font-weight:600;color:#333;flex:1;text-align:center}
+.rep-count.done-count{color:#2A6040}
+.rep-count.partial-count{color:#C9962A}
+.rep-time-est{font-size:11px;color:#2A7F7F;font-weight:500;display:block;margin-top:2px}
+
 .icon-btn{background:transparent;border:none;color:#bbb;cursor:pointer;font-size:16px;padding:4px 5px;line-height:1;border-radius:6px;-webkit-appearance:none}
 .icon-btn:active{background:#f0f0f0}
 .icon-btn.del:active{color:#E24B4A;background:#fff0f0}
@@ -79,7 +83,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .cal-nav-btn{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:6px 12px;font-size:15px;cursor:pointer;font-family:inherit;color:#333;-webkit-appearance:none}
 .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin-bottom:14px}
 .cal-dow{font-size:10px;color:#bbb;text-align:center;padding:4px 0;font-weight:600}
-.cal-day{background:#fff;border-radius:8px;border:1px solid #eee;padding:6px 2px;min-height:44px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:border-color 0.1s;-webkit-appearance:none}
+.cal-day{background:#fff;border-radius:8px;border:1px solid #eee;padding:6px 2px;min-height:44px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
 .cal-day:active{background:#f0f8ff}
 .cal-day.empty-day{background:transparent;border-color:transparent;cursor:default;pointer-events:none}
 .cal-day.today-day{border-color:#C9962A;border-width:2px}
@@ -90,7 +94,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .cal-day.selected-day.today-day .cal-dn{color:#fff}
 .cal-dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center}
 .cal-dot{width:5px;height:5px;border-radius:50%}
-.cal-dot.dot-plan{background:#C9962A}
+.cal-dot.dot-plan{background:#CBD5E0}
+.cal-dot.dot-partial{background:#C9962A}
 .cal-dot.dot-done{background:#2A6040}
 
 .day-panel{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
@@ -98,27 +103,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .day-panel-title{font-size:14px;font-weight:600;color:#222}
 .day-total{font-size:12px;color:#2A7F7F;font-weight:600}
 .plan-card{background:#f8f8f8;border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid #eee}
-.plan-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:6px}
+.plan-card.partial{background:#FFFBF0;border-left:3px solid #C9962A;border-radius:0 10px 10px 0}
+.plan-card.done-card{background:#F0FAF4;border-left:3px solid #2A6040;border-radius:0 10px 10px 0;opacity:0.75}
+.plan-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:8px}
 .plan-card-title{font-size:14px;font-weight:600;color:#222;flex:1}
-.plan-card-actions{display:flex;align-items:center;gap:6px;margin-top:8px}
 .rep-summary{font-size:12px;padding:8px 10px;border-radius:8px;margin-bottom:8px;line-height:1.5}
 .rep-summary.ok{background:#e8f5e9;color:#1B5E38}
 .rep-summary.warn{background:#FEF9EC;color:#8B6914}
 .rep-summary.over{background:#FCEBEB;color:#791F1F}
 
 .lib-card{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
-.lib-top{display:flex;align-items:flex-start;gap:10px}
-.lib-info{flex:1;min-width:0}
 .lib-title{font-size:15px;font-weight:600;color:#222;margin-bottom:5px}
-.lib-meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:7px}
+.lib-meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
 .lib-stat{font-size:12px;color:#888}
 .lib-stat b{color:#2A7F7F;font-weight:600}
-.prog-wrap{margin-top:7px}
+.prog-wrap{margin-top:7px;margin-bottom:10px}
 .prog-bg{background:#eee;border-radius:4px;height:6px;overflow:hidden;margin-bottom:3px}
 .prog-fill{height:6px;border-radius:4px;background:#2A7F7F;transition:width 0.4s}
 .prog-fill.complete{background:#C9962A}
 .prog-label{font-size:11px;color:#aaa}
 .prog-label.complete{color:#C9962A;font-weight:600}
+.lib-actions{display:flex;gap:8px;align-items:center}
 
 .log-filters{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
 .filter-btn{padding:6px 13px;border-radius:16px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap;border:1px solid #ddd;background:#fff;color:#888;-webkit-appearance:none;font-weight:500}
@@ -133,16 +138,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 .ms-section{margin-bottom:6px}
 .ms-hdr{font-size:11px;font-weight:600;padding:10px 0 6px;color:#999;border-bottom:1px solid #eee;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.4px}
-.ms-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #f0f0f0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ms-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #f0f0f0}
 .ms-item:last-child{border-bottom:none}
-.ms-check{width:22px;height:22px;border-radius:50%;border:1.5px solid #ddd;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.ms-check{width:22px;height:22px;border-radius:50%;border:1.5px solid #ddd;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;cursor:pointer}
 .ms-check.ach{background:#2A6040;border-color:#2A6040}
 .ms-check.ach::after{content:'';width:6px;height:10px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px);display:block}
-.ms-text{flex:1;font-size:13px;color:#333;line-height:1.4}
+.ms-text{flex:1;font-size:13px;color:#333;line-height:1.4;cursor:pointer}
 .ms-text.ach-text{color:#bbb;text-decoration:line-through}
 .ms-date{font-size:11px;color:#2A7F7F;white-space:nowrap}
 
-.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:100;display:flex;align-items:flex-end;justify-content:center;padding:0}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:100;display:flex;align-items:flex-end;justify-content:center}
 .modal-sheet{background:#fff;border-radius:20px 20px 0 0;padding:20px 16px;padding-bottom:max(env(safe-area-inset-bottom),20px);width:100%;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .modal-handle{width:36px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 16px}
 .modal-title{font-size:17px;font-weight:600;color:#222;margin-bottom:16px}
@@ -160,6 +165,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .fetch-status{font-size:12px;margin-top:5px;min-height:16px}
 .fetch-status.loading{color:#aaa}
 .fetch-status.success{color:#2A6040;font-weight:500}
+.bulk-preview{background:#f8f8f8;border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:13px;color:#555;line-height:1.7;min-height:44px}
+.bulk-preview b{color:#222}
 </style>
 </head>
 <body>
@@ -201,11 +208,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="scard-l">This week</div>
         <div class="scard-v" id="st-week">0</div>
         <div class="scard-sub">of <span id="st-goal">30</span> min/day goal</div>
-        <div class="goal-bar-wrap">
-          <div class="goal-bar-bg"><div class="goal-bar-fill" id="goal-bar" style="width:0%"></div></div>
-        </div>
+        <div class="goal-bar-wrap"><div class="goal-bar-bg"><div class="goal-bar-fill" id="goal-bar" style="width:0%"></div></div></div>
       </div>
     </div>
+    <div id="nudge-area"></div>
     <div class="sec-hdr">
       <div class="sec-label">Today's sessions</div>
       <button class="btn-add" onclick="openSessionForm(null,todayStr())">+ Add</button>
@@ -252,30 +258,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <script>
 const PRESETS=[
-  {phase:"Listening",items:[
-    "Caught a word I didn't know I knew",
-    "Understood a joke — and actually laughed",
-    "Listened without subtitles and followed along",
-    "Watched a full TV show or movie in my target language"
-  ]},
-  {phase:"Reading",items:[
-    "Read a full page without stopping once",
-    "Finished my first book in the target language",
-    "Completed a Google search in my target language",
-    "Understood a meme or a social media comment"
-  ]},
-  {phase:"Writing",items:[
-    "Wrote my first journal entry",
-    "Wrote a 250+ word entry without using a translator",
-    "Had a written conversation in my target language (with AI or a real person)",
-    "Got a like on my social media comment in my target language"
-  ]},
-  {phase:"Speaking",items:[
-    "Thought of a word or phrase in my target language before English",
-    "Had my first AI conversation in my target language",
-    "Had a conversation with a native speaker that lasted more than 5 minutes",
-    "Completed 30 shadowing reps with a single piece of content"
-  ]}
+  {phase:"Listening",items:["Caught a word I didn't know I knew","Understood a joke — and actually laughed","Listened without subtitles and followed along","Watched a full TV show or movie in my target language"]},
+  {phase:"Reading",items:["Read a full page without stopping once","Finished my first book in the target language","Completed a Google search in my target language","Understood a meme or a social media comment"]},
+  {phase:"Writing",items:["Wrote my first journal entry","Wrote a 250+ word entry without using a translator","Had a written conversation in my target language (with AI or a real person)","Got a like on my social media comment in my target language"]},
+  {phase:"Speaking",items:["Thought of a word or phrase in my target language before English","Had my first AI conversation in my target language","Had a conversation with a native speaker that lasted more than 5 minutes","Completed 30 shadowing reps with a single piece of content"]},
 ];
 
 const KEY='ll_tracker_v1';
@@ -289,10 +275,12 @@ function todayStr(){return new Date().toISOString().slice(0,10);}
 function fmtDate(d){const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-US',{month:'short',day:'numeric'});}
 function fmtDateLong(d){const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});}
 function phaseClass(p){return{Listening:'pl',Reading:'pr',Writing:'pw',Speaking:'ps'}[p]||'pl';}
-function fmtTime(min){min=Math.round(min);if(min<60)return min+' min';const h=Math.floor(min/60),m=min%60;return m>0?h+'h '+m+'m':h+'h';}
+function fmtTime(min){min=Math.round(min*10)/10;if(min<60)return min+' min';const h=Math.floor(min/60),m=Math.round(min%60);return m>0?h+'h '+m+'m':h+'h';}
 function weekStart(){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-d.getDay());return d.toISOString().slice(0,10);}
+function addDateDays(ds,n){const d=new Date(ds+'T00:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
 function isYouTubeUrl(url){return/(?:youtube\.com\/watch|youtu\.be\/|youtube\.com\/shorts\/)/.test(url);}
 async function fetchYouTubeTitle(url){try{const r=await fetch('https://www.youtube.com/oembed?url='+encodeURIComponent(url)+'&format=json');if(!r.ok)return null;const d=await r.json();return d.title||null;}catch(e){return null;}}
+function sessionStatus(s){if(!s.doneReps||s.doneReps===0)return'untouched';if(s.doneReps>=(s.targetReps||1))return'done';return'partial';}
 
 function showView(v){
   document.querySelectorAll('.view').forEach(e=>e.classList.remove('on'));
@@ -308,19 +296,17 @@ function showView(v){
 }
 
 function calcStats(){
-  const done=S.sessions.filter(s=>s.done);
-  const allTime=done.reduce((a,s)=>a+(parseInt(s.duration)||0),0);
-  const streak=calcStreak(done);
+  const allTime=S.sessions.reduce((a,s)=>a+(s.doneReps||0)*(s.minPerRep||0),0);
+  const streak=calcStreak();
   const ws=weekStart();
-  const weekMin=done.filter(s=>s.date>=ws).reduce((a,s)=>a+(parseInt(s.duration)||0),0);
-  const contentReps={};
-  done.forEach(s=>{if(s.contentId)contentReps[s.contentId]=(contentReps[s.contentId]||0)+(parseInt(s.reps)||0);});
-  const completed=Object.values(contentReps).filter(r=>r>=30).length;
+  const weekMin=S.sessions.filter(s=>s.date>=ws&&s.doneReps>0).reduce((a,s)=>a+(s.doneReps||0)*(s.minPerRep||0),0);
+  const cr={};S.sessions.forEach(s=>{if(s.contentId&&s.doneReps)cr[s.contentId]=(cr[s.contentId]||0)+(s.doneReps||0);});
+  const completed=Object.values(cr).filter(r=>r>=30).length;
   return{allTime,streak,weekMin,completed};
 }
-function calcStreak(done){
-  if(!done.length)return 0;
-  const days=[...new Set(done.map(s=>s.date))].sort().reverse();
+function calcStreak(){
+  const days=[...new Set(S.sessions.filter(s=>s.doneReps>0).map(s=>s.date))].sort().reverse();
+  if(!days.length)return 0;
   const t=todayStr();const y=new Date();y.setDate(y.getDate()-1);const ys=y.toISOString().slice(0,10);
   if(days[0]!==t&&days[0]!==ys)return 0;
   let str=1;
@@ -328,11 +314,11 @@ function calcStreak(done){
   return str;
 }
 function repSummary(cid,excId){
-  const done=S.sessions.filter(s=>s.contentId===cid&&s.done&&s.id!==excId).reduce((a,s)=>a+(parseInt(s.reps)||0),0);
-  const planned=S.sessions.filter(s=>s.contentId===cid&&!s.done&&s.id!==excId).reduce((a,s)=>a+(parseInt(s.reps)||0),0);
+  const done=S.sessions.filter(s=>s.contentId===cid&&s.doneReps>0&&s.id!==excId).reduce((a,s)=>a+(s.doneReps||0),0);
+  const planned=S.sessions.filter(s=>s.contentId===cid&&!(s.doneReps>=(s.targetReps||1))&&s.id!==excId).reduce((a,s)=>a+(s.targetReps||0),0);
   return{done,planned,total:done+planned};
 }
-function cumRepsUpTo(title,sid){let t=0;for(const s of S.sessions){if(s.contentTitle===title&&s.done)t+=(parseInt(s.reps)||0);if(s.id===sid)break;}return t;}
+function cumRepsUpTo(title,sid){let t=0;for(const s of S.sessions){if(s.contentTitle===title&&s.doneReps)t+=(s.doneReps||0);if(s.id===sid)break;}return t;}
 
 function renderToday(){
   const stats=calcStats();
@@ -341,77 +327,69 @@ function renderToday(){
   document.getElementById('st-time').textContent=fmtTime(stats.allTime);
   document.getElementById('st-completed').textContent=stats.completed;
   document.getElementById('st-week').textContent=fmtTime(stats.weekMin);
-  const goal=S.weeklyGoal||150;
+  const goal=S.weeklyGoal||210;
   document.getElementById('st-goal').textContent=Math.round(goal/7);
   const pct=Math.min(Math.round(stats.weekMin/goal*100),100);
   const bar=document.getElementById('goal-bar');
   bar.style.width=pct+'%';bar.className='goal-bar-fill'+(pct>=100?' done':'');
   const today=todayStr();
   const list=S.sessions.filter(s=>s.date===today);
-  // nudge banner
-  const existingBanner=document.getElementById('nudge-banner');
-  if(existingBanner)existingBanner.remove();
-  const hasDoneToday=list.some(s=>s.done);
-  const todayHdr=document.querySelector('#view-today .sec-hdr');
-  if(!hasDoneToday&&todayHdr){
-    const banner=document.createElement('div');
-    banner.id='nudge-banner';
-    banner.className='nudge-banner';
-    banner.innerHTML='<div class="nudge-dot"></div><div class="nudge-text">You haven\'t logged a session yet today — keep the streak alive!</div>';
-    todayHdr.parentNode.insertBefore(banner,todayHdr);
-  }
+  const hasDone=list.some(s=>s.doneReps>0);
+  document.getElementById('nudge-area').innerHTML=(!hasDone&&list.length)?'<div class="nudge-banner"><div class="nudge-dot"></div><div class="nudge-text">You haven\'t logged a session yet today — keep the streak alive!</div></div>':'';
   const el=document.getElementById('today-list');
   if(!list.length){el.innerHTML='<div class="empty">Nothing planned for today<div class="empty-sub">Tap + Add or plan ahead in the Plan tab</div></div>';return;}
-  el.innerHTML=list.map(s=>sessionCardHTML(s,true)).join('');
+  el.innerHTML=list.map(s=>sessionCardHTML(s)).join('');
 }
-function sessionCardHTML(s,isToday){
+
+function sessionCardHTML(s){
   const lib=S.content.find(c=>c.id===s.contentId);
-  const len=lib?lib.length:0;const reps=parseInt(s.reps)||1;
-  const est=len?Math.round(len*reps):null;const cum=cumRepsUpTo(s.contentTitle,s.id);
-  return`<div class="session-card ${s.done?'done':isToday?'today-plan':''}" id="sc-${s.id}">
+  const len=s.minPerRep||0;const target=s.targetReps||1;const done=s.doneReps||0;
+  const status=sessionStatus(s);
+  const cardClass=status==='done'?'done-card':status==='partial'?'partial':'planned';
+  const cum=cumRepsUpTo(s.contentTitle,s.id);
+  return`<div class="session-card ${cardClass}" id="sc-${s.id}">
     <div class="sc-top">
       <div class="sc-title">${s.contentTitle}</div>
       <div style="display:flex;align-items:center;gap:4px">
         <div class="phase-pill ${phaseClass(s.phase)}">${s.phase}</div>
-        ${!s.done?`<button class="icon-btn" onclick="openSessionForm('${s.id}','${s.date}')">&#9998;</button>`:''}
+        <button class="icon-btn" onclick="openSessionForm('${s.id}','${s.date}')">&#9998;</button>
         <button class="icon-btn del" onclick="deleteSession('${s.id}')">&#215;</button>
       </div>
     </div>
     ${lib&&lib.url?`<a class="sc-link" onclick="window.open('${encodeURI(lib.url)}','_blank')">${lib.url}</a>`:''}
     <div class="sc-meta">
       ${len?`<div class="sc-meta-item">${len} min/rep</div>`:''}
-      ${cum?`<div class="sc-meta-item">Cumulative reps: <b>${cum}</b></div>`:''}
+      ${cum?`<div class="sc-meta-item">Cumulative: <b>${cum} reps</b></div>`:''}
     </div>
-    <div class="sc-actions">
-      <div class="rep-row">
-        <span class="rep-label">Reps:</span>
-        <input class="rep-input" type="number" min="1" inputmode="numeric" value="${reps}" onchange="updateReps('${s.id}',this.value)" ${s.done?'disabled':''}>
-        ${est?`<span class="rep-time" id="rt-${s.id}">~${fmtTime(est)}</span>`:''}
+    <div class="rep-counter">
+      <button class="rep-btn" onclick="adjustReps('${s.id}',-1)">&#8722;</button>
+      <div class="rep-count ${status==='done'?'done-count':status==='partial'?'partial-count':''}">
+        ${done} / ${target} reps
+        ${len&&done>0?`<span class="rep-time-est">${fmtTime(done*len)}</span>`:''}
       </div>
-      ${!s.done?`<button class="btn-done" onclick="markDone('${s.id}')">Done</button>`:`<button class="btn-done is-done" disabled>Done</button>`}
+      <button class="rep-btn" onclick="adjustReps('${s.id}',1)">+</button>
     </div>
   </div>`;
 }
-function updateReps(id,val){
+
+function adjustReps(id,delta){
   const s=S.sessions.find(x=>x.id===id);if(!s)return;
-  s.reps=parseInt(val)||1;const lib=S.content.find(c=>c.id===s.contentId);
-  if(lib&&lib.length){const rt=document.getElementById('rt-'+id);if(rt)rt.textContent='~'+fmtTime(Math.round(lib.length*s.reps));}
+  s.doneReps=Math.max(0,Math.min((s.doneReps||0)+delta,s.targetReps||99));
   saveState();
-}
-function markDone(id){
-  const s=S.sessions.find(x=>x.id===id);if(!s)return;s.done=true;saveState();
   if(document.getElementById('view-today').classList.contains('on'))renderToday();
   if(document.getElementById('view-plan').classList.contains('on')){renderCal();renderDayPanel(S.selectedDay);}
 }
+
 function deleteSession(id){
   if(!confirm('Remove this session?'))return;
   S.sessions=S.sessions.filter(x=>x.id!==id);saveState();
   if(document.getElementById('view-today').classList.contains('on'))renderToday();
   if(document.getElementById('view-plan').classList.contains('on')){renderCal();renderDayPanel(S.selectedDay);}
 }
+
 function editWeeklyGoal(){
-  const current=Math.round((S.weeklyGoal||150)/7);
-  const val=prompt('How many minutes per day do you want to practice?',current);
+  const cur=Math.round((S.weeklyGoal||210)/7);
+  const val=prompt('How many minutes per day do you want to practice?',cur);
   if(val===null)return;const n=parseInt(val);if(n>0){S.weeklyGoal=n*7;saveState();renderToday();}
 }
 
@@ -427,14 +405,15 @@ function renderCal(){
   const first=new Date(S.calYear,S.calMonth,1).getDay();
   const days=new Date(S.calYear,S.calMonth+1,0).getDate();
   const today=todayStr();const sd={};
-  S.sessions.forEach(s=>{if(!sd[s.date])sd[s.date]={plan:0,done:0};if(s.done)sd[s.date].done++;else sd[s.date].plan++;});
+  S.sessions.forEach(s=>{if(!sd[s.date])sd[s.date]={plan:0,partial:0,done:0};const st=sessionStatus(s);if(st==='done')sd[s.date].done++;else if(st==='partial')sd[s.date].partial++;else sd[s.date].plan++;});
   let html='<div class="cal-dow">Su</div><div class="cal-dow">Mo</div><div class="cal-dow">Tu</div><div class="cal-dow">We</div><div class="cal-dow">Th</div><div class="cal-dow">Fr</div><div class="cal-dow">Sa</div>';
   for(let i=0;i<first;i++)html+='<div class="cal-day empty-day"></div>';
   for(let d=1;d<=days;d++){
     const ds=`${S.calYear}-${String(S.calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const di=sd[ds]||{plan:0,done:0};const isT=ds===today,isSel=ds===S.selectedDay;
+    const di=sd[ds]||{plan:0,partial:0,done:0};const isT=ds===today,isSel=ds===S.selectedDay;
     let dots='';
     if(di.plan>0)dots+='<div class="cal-dot dot-plan"></div>';
+    if(di.partial>0)dots+='<div class="cal-dot dot-partial"></div>';
     if(di.done>0)dots+='<div class="cal-dot dot-done"></div>';
     html+=`<div class="cal-day${isT?' today-day':''}${isSel?' selected-day':''}" onclick="selectDay('${ds}')"><div class="cal-dn">${d}</div><div class="cal-dots">${dots}</div></div>`;
   }
@@ -446,21 +425,39 @@ function selectDay(ds){S.selectedDay=ds;renderCal();}
 function renderDayPanel(ds){
   if(!ds){document.getElementById('day-panel').innerHTML='';return;}
   const daySessions=S.sessions.filter(s=>s.date===ds);
-  const totalEst=daySessions.reduce((a,s)=>{const lib=S.content.find(c=>c.id===s.contentId);return a+(lib&&lib.length?Math.round(lib.length*(parseInt(s.reps)||1)):0);},0);
   const today=todayStr();const isToday=ds===today;const isPast=ds<today;
-  let html=`<div class="day-panel"><div class="day-panel-hdr"><div class="day-panel-title">${fmtDateLong(ds)}${isToday?' — today':''}</div><div style="display:flex;align-items:center;gap:8px">${totalEst?`<div class="day-total">${fmtTime(totalEst)} total</div>`:''}<button class="btn-add" onclick="openSessionForm(null,'${ds}')">+ Add</button></div></div>`;
-  if(!daySessions.length){html+=`<div style="font-size:13px;color:#bbb;padding:8px 0">${isPast?'No sessions logged':'Nothing planned yet'}</div>`;}
-  else{html+=daySessions.map(s=>planCardHTML(s,isToday||isPast)).join('');}
+  const totalEst=daySessions.reduce((a,s)=>a+(s.targetReps||0)*(s.minPerRep||0),0);
+  let html=`<div class="day-panel"><div class="day-panel-hdr"><div class="day-panel-title">${fmtDateLong(ds)}${isToday?' — today':''}</div><div style="display:flex;align-items:center;gap:8px">${totalEst?`<div class="day-total">${fmtTime(totalEst)} planned</div>`:''}<button class="btn-add" onclick="openSessionForm(null,'${ds}')">+ Add</button></div></div>`;
+  if(!daySessions.length)html+=`<div style="font-size:13px;color:#bbb;padding:8px 0">${isPast?'No sessions logged':'Nothing planned yet'}</div>`;
+  else html+=daySessions.map(s=>planCardHTML(s)).join('');
   html+='</div>';
   document.getElementById('day-panel').innerHTML=html;
 }
-function planCardHTML(s,showDone){
-  const lib=S.content.find(c=>c.id===s.contentId);const len=lib?lib.length:0;
-  const reps=parseInt(s.reps)||1;const est=len?Math.round(len*reps):null;
-  const rs=s.contentId?repSummary(s.contentId,null):{done:0,planned:0,total:0};const total=rs.total;
+function planCardHTML(s){
+  const len=s.minPerRep||0;const target=s.targetReps||1;const done=s.doneReps||0;
+  const status=sessionStatus(s);
+  const rs=s.contentId?repSummary(s.contentId,null):{done:0,planned:0,total:0};
+  const total=rs.total;
   const cls=total>=30?'over':total>=20?'ok':'warn';
   const msg=total>=30?`${rs.done} done + ${rs.planned} planned = ${total} — consider new content`:`${rs.done} done + ${rs.planned} planned = ${total} total reps`;
-  return`<div class="plan-card" id="pc-${s.id}"><div class="plan-card-top"><div><div class="plan-card-title">${s.contentTitle}</div></div><div style="display:flex;align-items:center;gap:4px"><div class="phase-pill ${phaseClass(s.phase)}">${s.phase}</div><button class="icon-btn" onclick="openSessionForm('${s.id}','${s.date}')">&#9998;</button><button class="icon-btn del" onclick="deleteSession('${s.id}')">&#215;</button></div></div><div class="rep-summary ${cls}">${msg}</div><div class="plan-card-actions"><div class="rep-row"><span class="rep-label">Reps:</span><input class="rep-input" type="number" min="1" inputmode="numeric" value="${reps}" onchange="updateReps('${s.id}',this.value)">${est?`<span class="rep-time" id="rt-${s.id}">~${fmtTime(est)}</span>`:''}</div>${showDone&&!s.done?`<button class="btn-done" onclick="markDone('${s.id}')">Done</button>`:''} ${s.done?`<button class="btn-done is-done" disabled>Done</button>`:''}</div></div>`;
+  const cardCls=status==='done'?'done-card':status==='partial'?'partial':'';
+  return`<div class="plan-card ${cardCls}" id="pc-${s.id}">
+    <div class="plan-card-top"><div><div class="plan-card-title">${s.contentTitle}</div></div>
+      <div style="display:flex;align-items:center;gap:4px">
+        <div class="phase-pill ${phaseClass(s.phase)}">${s.phase}</div>
+        <button class="icon-btn" onclick="openSessionForm('${s.id}','${s.date}')">&#9998;</button>
+        <button class="icon-btn del" onclick="deleteSession('${s.id}')">&#215;</button>
+      </div>
+    </div>
+    <div class="rep-summary ${cls}">${msg}</div>
+    <div class="rep-counter">
+      <button class="rep-btn" onclick="adjustReps('${s.id}',-1)">&#8722;</button>
+      <div class="rep-count ${status==='done'?'done-count':status==='partial'?'partial-count':''}">
+        ${done} / ${target} reps${len?` <span style="font-size:11px;color:#aaa">(${fmtTime(len)}/rep)</span>`:''}
+      </div>
+      <button class="rep-btn" onclick="adjustReps('${s.id}',1)">+</button>
+    </div>
+  </div>`;
 }
 
 function renderLibrary(){
@@ -468,19 +465,95 @@ function renderLibrary(){
   if(!S.content.length){el.innerHTML='<div class="empty">No content yet<div class="empty-sub">Add a video, podcast, audiobook<br>or anything you practice with</div></div>';return;}
   el.innerHTML=S.content.map(c=>{
     const rs=repSummary(c.id,null);const pct=Math.min(Math.round(rs.done/30*100),100);const isC=rs.done>=30;
-    return`<div class="lib-card"><div class="lib-top"><div class="lib-info"><div class="lib-title">${c.title}</div><div class="lib-meta"><div class="phase-pill ${phaseClass(c.phase)}" style="font-size:11px;padding:3px 8px">${c.phase}</div>${c.length?`<span class="lib-stat">${c.length} min/rep</span>`:''} ${rs.total?`<span class="lib-stat"><b>${rs.done}</b> done + <b>${rs.planned}</b> planned</span>`:'<span class="lib-stat">No sessions yet</span>'}</div>${c.url?`<a class="sc-link" onclick="window.open('${encodeURI(c.url)}','_blank')" style="margin-top:5px">${c.url}</a>`:''}<div class="prog-wrap"><div class="prog-bg"><div class="prog-fill${isC?' complete':''}" style="width:${pct}%"></div></div><div class="prog-label${isC?' complete':''}">${isC?'Complete — 30 reps reached':`${rs.done} / 30 reps (${pct}%)`}</div></div></div><button class="icon-btn del" onclick="deleteContent('${c.id}')" style="padding-top:2px">&#215;</button></div></div>`;
+    return`<div class="lib-card">
+      <div class="lib-title">${c.title}</div>
+      <div class="lib-meta">
+        <div class="phase-pill ${phaseClass(c.phase)}" style="font-size:11px;padding:3px 8px">${c.phase}</div>
+        ${c.length?`<span class="lib-stat">${c.length} min/rep</span>`:''}
+        ${rs.total?`<span class="lib-stat"><b>${rs.done}</b> done + <b>${rs.planned}</b> planned</span>`:'<span class="lib-stat">No sessions yet</span>'}
+      </div>
+      ${c.url?`<a class="sc-link" onclick="window.open('${encodeURI(c.url)}','_blank')" style="margin-bottom:6px">${c.url}</a>`:''}
+      <div class="prog-wrap">
+        <div class="prog-bg"><div class="prog-fill${isC?' complete':''}" style="width:${pct}%"></div></div>
+        <div class="prog-label${isC?' complete':''}">${isC?'Complete — 30 reps reached':`${rs.done} / 30 reps (${pct}%)`}</div>
+      </div>
+      <div class="lib-actions">
+        <button class="btn-teal" onclick="openBulkAdd('${c.id}')">Add to planner</button>
+        <button class="icon-btn del" onclick="deleteContent('${c.id}')" style="font-size:18px;padding:4px 8px">&#215;</button>
+      </div>
+    </div>`;
   }).join('');
 }
 function deleteContent(id){if(!confirm('Remove this content?'))return;S.content=S.content.filter(c=>c.id!==id);saveState();renderLibrary();}
 
+let _bulkRows=[];
+function openBulkAdd(contentId){
+  const c=S.content.find(x=>x.id===contentId);if(!c)return;
+  _bulkRows=[];
+  for(let i=0;i<7;i++) _bulkRows.push({date:addDateDays(todayStr(),i),reps:1});
+  renderBulkModal(contentId);
+}
+function renderBulkModal(contentId){
+  const c=S.content.find(x=>x.id===contentId);if(!c)return;
+  const rs=repSummary(contentId,null);
+  const totalReps=_bulkRows.reduce((a,r)=>a+(parseInt(r.reps)||0),0);
+  const totalTime=c.length?fmtTime(c.length*totalReps):'—';
+  const newTotal=rs.total+totalReps;
+  const warn=newTotal>=30?`<div style="background:#FEF9EC;border-radius:8px;padding:8px 10px;font-size:12px;color:#8B6914;font-weight:600;margin-bottom:10px">Note: brings total reps to ${newTotal} — target is 30</div>`:'';
+  const rows=_bulkRows.map((r,i)=>`
+    <div style="display:grid;grid-template-columns:1fr 80px 36px;gap:8px;align-items:center;margin-bottom:8px">
+      <input type="date" value="${r.date}" onchange="_bulkRows[${i}].date=this.value;updateBulkFooter('${contentId}')" style="padding:8px 10px;border:1px solid #e0e0e0;border-radius:10px;font-size:14px;font-family:inherit;background:#f8f8f8;color:#222;-webkit-appearance:none;width:100%">
+      <div style="display:flex;align-items:center;gap:4px">
+        <input type="number" inputmode="numeric" min="1" value="${r.reps}" onchange="_bulkRows[${i}].reps=parseInt(this.value)||1;updateBulkFooter('${contentId}')" style="width:100%;padding:8px 6px;border:1px solid #e0e0e0;border-radius:10px;font-size:14px;text-align:center;font-family:inherit;background:#f8f8f8;color:#222;-webkit-appearance:none">
+      </div>
+      <button onclick="removeBulkRow(${i},'${contentId}')" style="width:36px;height:36px;border-radius:9px;border:1px solid #eee;background:#fff;font-size:18px;cursor:pointer;color:#bbb;display:flex;align-items:center;justify-content:center;font-family:inherit;flex-shrink:0">&#215;</button>
+    </div>`).join('');
+  document.getElementById('modal-area').innerHTML=`<div class="modal-overlay" onclick="closeOnOverlay(event)"><div class="modal-sheet"><div class="modal-handle"></div>
+    <div class="modal-title">Add to planner — ${c.title}</div>
+    <div style="display:grid;grid-template-columns:1fr 80px 36px;gap:8px;margin-bottom:6px;padding:0 2px">
+      <div style="font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:0.4px">Date</div>
+      <div style="font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:0.4px;text-align:center">Reps</div>
+      <div></div>
+    </div>
+    <div id="bulk-rows">${rows}</div>
+    ${warn}
+    <div id="bulk-footer" style="font-size:13px;color:#2A7F7F;font-weight:600;margin-bottom:12px">${_bulkRows.length} sessions · ${totalReps} total reps · ~${totalTime}</div>
+    <button onclick="addBulkRow('${contentId}')" class="btn-sm" style="width:100%;margin-bottom:12px;padding:10px;border-radius:10px">+ Add day</button>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-save" onclick="saveBulkAdd('${contentId}')">Add ${_bulkRows.length} sessions</button></div>
+  </div></div>`;
+}
+function removeBulkRow(i,contentId){_bulkRows.splice(i,1);renderBulkModal(contentId);}
+function addBulkRow(contentId){
+  const last=_bulkRows[_bulkRows.length-1];
+  const nextDate=last?addDateDays(last.date,1):todayStr();
+  _bulkRows.push({date:nextDate,reps:1});
+  renderBulkModal(contentId);
+}
+function updateBulkFooter(contentId){
+  const c=S.content.find(x=>x.id===contentId);if(!c)return;
+  const totalReps=_bulkRows.reduce((a,r)=>a+(parseInt(r.reps)||0),0);
+  const totalTime=c.length?fmtTime(c.length*totalReps):'—';
+  const el=document.getElementById('bulk-footer');
+  if(el)el.textContent=`${_bulkRows.length} sessions · ${totalReps} total reps · ~${totalTime}`;
+}
+function saveBulkAdd(contentId){
+  const c=S.content.find(x=>x.id===contentId);if(!c)return;
+  _bulkRows.forEach((r,i)=>{
+    if(!r.date||!r.reps)return;
+    S.sessions.push({id:Date.now().toString()+'_'+i,date:r.date,contentId:c.id,contentTitle:c.title,phase:c.phase,targetReps:parseInt(r.reps)||1,doneReps:0,minPerRep:c.length||0,note:''});
+  });
+  _bulkRows=[];saveState();closeModal();
+  if(document.getElementById('view-plan').classList.contains('on')){renderCal();if(S.selectedDay)renderDayPanel(S.selectedDay);}
+  if(document.getElementById('view-today').classList.contains('on'))renderToday();
+}
+
 function openAddContent(){
   document.getElementById('modal-area').innerHTML=`<div class="modal-overlay" onclick="closeOnOverlay(event)"><div class="modal-sheet"><div class="modal-handle"></div>
     <div class="modal-title">Add to library</div>
-    <div class="field"><label>Link / URL <span class="opt">(optional — YouTube auto-fills title)</span></label><input id="f-url" type="url" placeholder="https://..." oninput="onUrlInput(this.value)" autocomplete="off"></div>
-    <div class="fetch-status" id="fetch-status"></div>
+    <div class="field"><label>Link / URL <span class="opt">(optional — YouTube auto-fills title)</span></label><input id="f-url" type="url" placeholder="https://..." oninput="onUrlInput(this.value)" autocomplete="off"><div class="fetch-status" id="fetch-status"></div></div>
     <div class="field"><label>Content title</label><input id="f-title" type="text" placeholder="e.g. Easy Spanish Ep. 12" autocomplete="off"></div>
     <div class="field-row">
-      <div class="field"><label>Length (min)</label><input id="f-len" type="number" inputmode="numeric" min="1" placeholder="e.g. 7"></div>
+      <div class="field"><label>Length (min)</label><input id="f-len" type="number" inputmode="decimal" min="0.5" step="0.5" placeholder="e.g. 7.5"></div>
       <div class="field"><label>Phase</label><select id="f-phase"><option>Listening</option><option>Reading</option><option>Writing</option><option>Speaking</option></select></div>
     </div>
     <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-save" onclick="saveContent()">Save</button></div>
@@ -501,7 +574,7 @@ function onUrlInput(val){
 }
 function saveContent(){
   const title=document.getElementById('f-title').value.trim();if(!title){document.getElementById('f-title').focus();return;}
-  S.content.push({id:Date.now().toString(),title,url:document.getElementById('f-url').value.trim(),length:parseInt(document.getElementById('f-len').value)||0,phase:document.getElementById('f-phase').value});
+  S.content.push({id:Date.now().toString(),title,url:document.getElementById('f-url').value.trim(),length:parseFloat(document.getElementById('f-len').value)||0,phase:document.getElementById('f-phase').value});
   saveState();closeModal();renderLibrary();
 }
 
@@ -519,8 +592,8 @@ function openSessionForm(sessionId,date){
       <div class="field"><label>Phase</label><select id="s-phase">${['Listening','Reading','Writing','Speaking'].map(p=>`<option${existing&&existing.phase===p?' selected':''}>${p}</option>`).join('')}</select></div>
     </div>
     <div class="field-row">
-      <div class="field"><label>Reps</label><input id="s-reps" type="number" inputmode="numeric" min="1" value="${existing?existing.reps:1}" oninput="updEst()"></div>
-      <div class="field"><label>Duration (min) <span class="opt">optional</span></label><input id="s-dur" type="number" inputmode="numeric" min="1" value="${existing&&existing.duration?existing.duration:''}" placeholder="auto"></div>
+      <div class="field"><label>Target reps</label><input id="s-reps" type="number" inputmode="numeric" min="1" value="${existing?existing.targetReps:1}" oninput="updEst()"></div>
+      <div class="field"><label>Min per rep <span class="opt">optional</span></label><input id="s-mpr" type="number" inputmode="decimal" min="0.5" step="0.5" value="${existing&&existing.minPerRep?existing.minPerRep:(_clen||'')}" placeholder="auto"></div>
     </div>
     <div class="est-line" id="s-est"></div>
     <div id="s-rep-summary"></div>
@@ -533,30 +606,32 @@ function prefill(id){
   const c=S.content.find(x=>x.id===id);if(!c){_cid=null;_clen=0;return;}
   _cid=c.id;_clen=c.length||0;
   document.getElementById('s-title').value=c.title;document.getElementById('s-phase').value=c.phase;
+  const mpr=document.getElementById('s-mpr');if(mpr)mpr.value=_clen||'';
   updEst();updRepSummary();
 }
 function updEst(){
-  const reps=parseInt(document.getElementById('s-reps')?.value)||1;const el=document.getElementById('s-est');if(!el)return;
-  if(_clen&&reps){el.textContent='Estimated: '+fmtTime(Math.round(_clen*reps));const d=document.getElementById('s-dur');if(d&&!d.value)d.placeholder=Math.round(_clen*reps);}
-  else el.textContent='';updRepSummary();
+  const reps=parseInt(document.getElementById('s-reps')?.value)||1;
+  const mpr=parseFloat(document.getElementById('s-mpr')?.value)||_clen||0;
+  const el=document.getElementById('s-est');if(!el)return;
+  el.textContent=mpr&&reps?`Estimated: ${fmtTime(mpr*reps)}`:'';
+  updRepSummary();
 }
 function updRepSummary(){
   const el=document.getElementById('s-rep-summary');if(!el||!_cid)return;
   const reps=parseInt(document.getElementById('s-reps')?.value)||1;
   const rs=repSummary(_cid,_editSessionId);const newTotal=rs.total+reps;
   const cls=newTotal>=30?'over':newTotal>=20?'ok':'warn';
-  const msg=newTotal>=30?`Adding ${reps} rep${reps>1?'s':''} → ${newTotal} total — consider new content`:`${rs.done} done + ${rs.planned+reps} planned = ${newTotal} total reps`;
-  el.innerHTML=`<div class="rep-summary ${cls}">${msg}</div>`;
+  el.innerHTML=`<div class="rep-summary ${cls}">${rs.done} done + ${rs.planned+reps} planned = ${newTotal} total reps${newTotal>=30?' — consider new content':''}</div>`;
 }
 function saveSession(){
   const title=document.getElementById('s-title').value.trim();if(!title)return;
   const reps=parseInt(document.getElementById('s-reps').value)||1;
-  const autoDur=_clen?Math.round(_clen*reps):0;const manDur=parseInt(document.getElementById('s-dur').value)||0;
+  const mpr=parseFloat(document.getElementById('s-mpr')?.value)||_clen||0;
   if(_editSessionId){
     const s=S.sessions.find(x=>x.id===_editSessionId);
-    if(s){s.contentId=_cid||null;s.contentTitle=title;s.phase=document.getElementById('s-phase').value;s.reps=reps;s.duration=manDur||autoDur||0;s.note=document.getElementById('s-note').value.trim();s.date=document.getElementById('s-date').value||todayStr();}
+    if(s){s.contentId=_cid||null;s.contentTitle=title;s.phase=document.getElementById('s-phase').value;s.targetReps=reps;s.minPerRep=mpr;s.note=document.getElementById('s-note').value.trim();s.date=document.getElementById('s-date').value||todayStr();}
   }else{
-    S.sessions.push({id:Date.now().toString(),date:document.getElementById('s-date').value||todayStr(),contentId:_cid||null,contentTitle:title,phase:document.getElementById('s-phase').value,reps,duration:manDur||autoDur||0,note:document.getElementById('s-note').value.trim(),done:false});
+    S.sessions.push({id:Date.now().toString(),date:document.getElementById('s-date').value||todayStr(),contentId:_cid||null,contentTitle:title,phase:document.getElementById('s-phase').value,targetReps:reps,doneReps:0,minPerRep:mpr,note:document.getElementById('s-note').value.trim()});
   }
   _cid=null;_clen=0;_editSessionId=null;saveState();closeModal();
   if(document.getElementById('view-today').classList.contains('on'))renderToday();
@@ -566,12 +641,25 @@ function saveSession(){
 function setFilter(f,btn){S.logFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderLog();}
 function renderLog(){
   const el=document.getElementById('log-list');
-  let sessions=S.sessions.filter(s=>s.done).slice().reverse();
+  let sessions=S.sessions.filter(s=>s.doneReps>0).slice().reverse();
   if(S.logFilter!=='all')sessions=sessions.filter(s=>s.phase===S.logFilter);
   if(!sessions.length){el.innerHTML='<div class="empty">No sessions logged yet<div class="empty-sub">Complete a session to see it here</div></div>';return;}
   el.innerHTML=sessions.map(s=>{
     const cum=cumRepsUpTo(s.contentTitle,s.id);
-    return`<div class="log-card"><div class="log-top"><div class="log-title">${s.contentTitle}</div><div style="display:flex;align-items:center;gap:6px"><div class="log-date">${fmtDate(s.date)}</div><button class="icon-btn" onclick="openEditLog('${s.id}')">&#9998;</button></div></div><div class="log-meta"><div class="phase-pill ${phaseClass(s.phase)}" style="font-size:11px;padding:3px 8px">${s.phase}</div><div style="font-size:12px;color:#888">Reps: <b style="color:#333">${s.reps||1}</b></div>${s.duration?`<div style="font-size:12px;color:#888">Time: <b style="color:#333">${fmtTime(s.duration)}</b></div>`:''}</div><div class="log-cum">Total reps for this content: ${cum}</div>${s.note?`<div class="log-note">"${s.note}"</div>`:''}</div>`;
+    const partial=s.doneReps<s.targetReps?` <span style="color:#C9962A;font-size:11px">(${s.doneReps}/${s.targetReps})</span>`:'';
+    return`<div class="log-card">
+      <div class="log-top"><div class="log-title">${s.contentTitle}${partial}</div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="log-date">${fmtDate(s.date)}</div>
+          <button class="icon-btn" onclick="openEditLog('${s.id}')">&#9998;</button></div>
+      </div>
+      <div class="log-meta">
+        <div class="phase-pill ${phaseClass(s.phase)}" style="font-size:11px;padding:3px 8px">${s.phase}</div>
+        <div style="font-size:12px;color:#888">Reps: <b style="color:#333">${s.doneReps}</b></div>
+        ${s.minPerRep&&s.doneReps?`<div style="font-size:12px;color:#888">Time: <b style="color:#333">${fmtTime(s.doneReps*s.minPerRep)}</b></div>`:''}
+      </div>
+      <div class="log-cum">Total reps for this content: ${cum}</div>
+      ${s.note?`<div class="log-note">"${s.note}"</div>`:''}
+    </div>`;
   }).join('');
 }
 function openEditLog(id){
@@ -584,8 +672,8 @@ function openEditLog(id){
       <div class="field"><label>Phase</label><select id="el-phase">${['Listening','Reading','Writing','Speaking'].map(p=>`<option${s.phase===p?' selected':''}>${p}</option>`).join('')}</select></div>
     </div>
     <div class="field-row">
-      <div class="field"><label>Reps</label><input id="el-reps" type="number" inputmode="numeric" min="1" value="${s.reps||1}"></div>
-      <div class="field"><label>Duration (min)</label><input id="el-dur" type="number" inputmode="numeric" min="1" value="${s.duration||''}"></div>
+      <div class="field"><label>Reps done</label><input id="el-reps" type="number" inputmode="numeric" min="0" value="${s.doneReps||0}"></div>
+      <div class="field"><label>Min per rep</label><input id="el-mpr" type="number" inputmode="decimal" min="0.5" step="0.5" value="${s.minPerRep||''}"></div>
     </div>
     <div class="field"><label>Notes <span class="opt">optional</span></label><input id="el-note" type="text" value="${s.note||''}"></div>
     <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-save" onclick="saveLogEdit()">Update</button></div>
@@ -595,8 +683,8 @@ function saveLogEdit(){
   const s=S.sessions.find(x=>x.id===_editLogId);if(!s)return;
   s.contentTitle=document.getElementById('el-title').value.trim()||s.contentTitle;
   s.date=document.getElementById('el-date').value||s.date;s.phase=document.getElementById('el-phase').value;
-  s.reps=parseInt(document.getElementById('el-reps').value)||s.reps;
-  s.duration=parseInt(document.getElementById('el-dur').value)||0;
+  s.doneReps=parseInt(document.getElementById('el-reps').value)||0;
+  s.minPerRep=parseFloat(document.getElementById('el-mpr').value)||s.minPerRep||0;
   s.note=document.getElementById('el-note').value.trim();
   _editLogId=null;saveState();closeModal();renderLog();
   if(document.getElementById('view-today').classList.contains('on'))renderToday();
@@ -608,14 +696,23 @@ function renderMilestones(){
     html+=`<div class="ms-section"><div class="ms-hdr">${sec.phase}</div>`;
     sec.items.forEach(item=>{
       const key=sec.phase+'::'+item;const ach=S.milestones[key];
-      html+=`<div class="ms-item" onclick="toggleMs('${key.replace(/'/g,"\\'")}')"><div class="ms-check ${ach?'ach':''}"></div><div class="ms-text ${ach?'ach-text':''}">${item}</div>${ach?`<div class="ms-date">${fmtDate(ach)}</div>`:''}</div>`;
+      html+=`<div class="ms-item" onclick="toggleMs('${key.replace(/'/g,"\\'")}')">
+        <div class="ms-check ${ach?'ach':''}"></div>
+        <div class="ms-text ${ach?'ach-text':''}">${item}</div>
+        ${ach?`<div class="ms-date">${fmtDate(ach)}</div>`:''}
+      </div>`;
     });
     html+='</div>';
   });
   const custom=S.milestones['__custom__']||[];
   html+=`<div class="ms-section"><div class="ms-hdr">Your own milestones</div>`;
   custom.forEach((item,i)=>{
-    html+=`<div class="ms-item" onclick="toggleCustom(${i})"><div class="ms-check ${item.ach?'ach':''}"></div><div class="ms-text ${item.ach?'ach-text':''}">${item.text}</div>${item.ach?`<div class="ms-date">${fmtDate(item.ach)}</div>`:''}</div>`;
+    html+=`<div class="ms-item">
+      <div class="ms-check ${item.ach?'ach':''}" onclick="toggleCustom(${i})" style="cursor:pointer"></div>
+      <div class="ms-text ${item.ach?'ach-text':''}" onclick="toggleCustom(${i})" style="cursor:pointer;flex:1">${item.text}</div>
+      ${item.ach?`<div class="ms-date">${fmtDate(item.ach)}</div>`:''}
+      <button class="icon-btn del" onclick="deleteCustomMs(${i})" style="font-size:16px;padding:4px 6px" title="Remove">&#215;</button>
+    </div>`;
   });
   html+=`<div style="margin-top:10px"><button class="btn-sm" onclick="addCustomMs()">+ Add milestone</button></div></div>`;
   document.getElementById('ms-list').innerHTML=html;
@@ -623,9 +720,10 @@ function renderMilestones(){
 function toggleMs(key){if(S.milestones[key])delete S.milestones[key];else S.milestones[key]=todayStr();saveState();renderMilestones();}
 function toggleCustom(i){const c=S.milestones['__custom__']||[];c[i].ach=c[i].ach?null:todayStr();S.milestones['__custom__']=c;saveState();renderMilestones();}
 function addCustomMs(){const t=prompt('Enter your milestone:');if(!t||!t.trim())return;const c=S.milestones['__custom__']||[];c.push({text:t.trim(),ach:null});S.milestones['__custom__']=c;saveState();renderMilestones();}
+function deleteCustomMs(i){if(!confirm('Remove this milestone?'))return;const c=S.milestones['__custom__']||[];c.splice(i,1);S.milestones['__custom__']=c;saveState();renderMilestones();}
 
 function closeOnOverlay(e){if(e.target.classList.contains('modal-overlay'))closeModal();}
-function closeModal(){document.getElementById('modal-area').innerHTML='';_cid=null;_clen=0;_editSessionId=null;_editLogId=null;}
+function closeModal(){document.getElementById('modal-area').innerHTML='';_cid=null;_clen=0;_editSessionId=null;_editLogId=null;_bulkRows=[];}
 
 document.getElementById('langBtn').addEventListener('click',()=>{
   const l=prompt('What language are you learning?',S.language);
